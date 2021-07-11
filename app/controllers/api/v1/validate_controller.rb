@@ -21,7 +21,7 @@ module Api
 
         if player.save
           if player.char_checked.values.all? { |value| value == true }
-            player.end_time = Time.now.to_i if player.end_time == nil
+            player.end_time = DateTime.now.strftime('%Q').to_i if player.end_time == nil
             if player.save
               render json: {"validate": true, "win": true}
             end

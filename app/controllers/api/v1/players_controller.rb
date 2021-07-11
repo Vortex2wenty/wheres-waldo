@@ -2,6 +2,13 @@ module Api
   module V1
     class PlayersController < ApplicationController
       skip_before_action :verify_authenticity_token
+      
+      def show
+        player = Player.find_by(id: params[:id])
+
+        render json: PlayerSerializer.new(player).serializable_hash.to_json
+      end
+
   def create
     player = Player.new(create_player_params)
 

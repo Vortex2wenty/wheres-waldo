@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :levels, only: [:index, :show]
       resources :leaderboards, only: [:index, :show, :update]
-      resources :players, only: [:create, :update]
+      resources :players, only: [:create, :update, :show]
       get 'validate/:level', to: 'validate#validate'
       # TODO: Maybe get 'validate/won/:level' to 'validate#won' or just do in front end 
     end

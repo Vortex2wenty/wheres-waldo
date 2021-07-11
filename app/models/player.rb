@@ -10,4 +10,11 @@ class Player < ApplicationRecord
 			"odlaw": false
 		}
 	end
+
+	def time_diff
+		return if self.start_time.nil? || self.end_time.nil?
+		unless self.start_time.nil? && self.end_time.nil?
+			self.end_time - self.start_time
+		end
+	end
 end

@@ -1,31 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const Level = (props) => {
+  let history = useHistory();
   const popup = useRef(null);
+  const leaderboardPopup = useRef(null);
   const { level } = useParams();
   const [popupActive, setPopupActive] = useState(true);
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [displayTime, setDisplayTime] = useState();
+  const [playerID, setPlayerID] = useState();
+  const [username, setUsername] = useState();
 
   useEffect(async () => {
     let request = await axios.get(`/api/v1/levels/${level}`);
     console.log(request.data);
     let leaderboard_id = request.data.data.attributes.leaderboard_id;
     let dateNow = Date.now();
-    axios.post('/api/v1/players', {
-      "start_time": dateNow,
-      leaderboard_id
+    let response = await axios.post('/api/v1/players', {
+      start_time: dateNow,
+      leaderboard_id,
     });
+    setPlayerID(+response.data.data.id);
     setStartTime(dateNow);
   }, []);
 
-
   useEffect(() => {
     setTimeout(() => {
-      let diff = Math.abs(Date.now() - startTime);
+      console.log('endTime: ' + endTime);
+      let diff = Math.abs((endTime ? endTime : Date.now()) - startTime);
+      console.log('diff: ' + diff);
 
       let ms = diff % 1000;
       diff = (diff - ms) / 1000;
@@ -35,9 +41,17 @@ const Level = (props) => {
       diff = (diff - mm) / 60;
       let hh = diff % 24;
 
-      setDisplayTime(`${hh < 10 ? '0' + hh : hh}:${mm < 10 ? '0' + mm : mm}:${ss < 10 ? '0' + ss : ss}`);
+      setDisplayTime(
+        `${hh < 10 ? '0' + hh : hh}:${mm < 10 ? '0' + mm : mm}:${
+          ss < 10 ? '0' + ss : ss
+        }`
+      );
     }, 1000);
   });
+
+  const toggleLeaderboardPopup = () => {
+    leaderboardPopup.style.display = 'block';
+  };
 
   const imgClick = (e) => {
     var rect = e.target.getBoundingClientRect();
@@ -46,29 +60,37 @@ const Level = (props) => {
 
     const characterClick = (e) => {
       e.preventDefault();
-      axios.get(`/api/v1/validate/${level}`, {
-        params: {
-          validate: {
-            char_locations: {
-              [e.target.textContent.toLowerCase()]: [+Math.round(x), +Math.round(y)]
-            }  
+      axios
+        .get(`/api/v1/validate/${level}`, {
+          params: {
+            validate: {
+              char_locations: {
+                [e.target.textContent.toLowerCase()]: [
+                  +Math.round(x),
+                  +Math.round(y),
+                ],
+              },
+            },
+          },
+        })
+        .then(async (response) => {
+          if (response.data.win) {
+            console.log('You won!');
+            let playerEndTime = await axios.get(`/api/v1/players/${playerID}`);
+            playerEndTime = playerEndTime.data.data.attributes.end_time;
+            setEndTime(playerEndTime);
+            console.log(endTime);
+            toggleLeaderboardPopup();
+          } else if (response.data.validate) {
+            console.log('Char hit!');
+            // placeMarker(x, y);
+          } else {
+            console.log('No chars hit!');
           }
-        }
-      })
-      .then((response) => {
-        if (response.data.win) {
-          console.log('You won!')
-          // toggleLeaderboardPopup();
-        } else if (response.data.validate) {
-          console.log('Char hit!')
-          // placeMarker(x, y);
-        } else {
-          console.log('No chars hit!')
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       popup.current.querySelectorAll('a').forEach((anchor) => {
         anchor.removeEventListener('click', characterClick);
       });
@@ -91,6 +113,20 @@ const Level = (props) => {
       setPopupActive(true);
     }
     console.log('Left? : ' + x + ' ; Top? : ' + y + '.');
+  };
+  
+  const handleChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let response = await axios.patch(`/api/v1/players/${playerID}`, {
+      name: username
+    });
+    if (response.data) {
+      history.push(`/leaderboards/${response.data.data.attributes.leaderboard_id}`);
+    }
   };
 
   return (
@@ -120,6 +156,15 @@ const Level = (props) => {
               </a>
             </li>
           </ul>
+        </div>
+        <div ref={leaderboardPopup} className="modal">
+          <div className="modal-content">
+            Enter your username:
+            <form onSubmit={handleSubmit}>
+              <input onChange={handleChange} type="text" name="username" />
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
         </div>
         <div className="grid-title">
           <h2>Time - {displayTime}</h2>

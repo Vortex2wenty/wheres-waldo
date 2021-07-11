@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <Switch>
         <Route exact path='/' component={App} />
         <Route path='/levels/:level' component={PropsLevel} />
+        <Route path='/leaderboards' component={Leaderboards} />
       </Switch>
     </Router>,
     document.body.appendChild(document.createElement('div'))
