@@ -1,4 +1,3 @@
-// TODO: Should probably save img name in level database and fetch via api
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LevelBoard from '../components/LevelBoard';

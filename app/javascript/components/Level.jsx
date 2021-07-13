@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import Checkmark from './Checkmark';
 import axios from 'axios';
 
 const Level = (props) => {
@@ -13,6 +14,7 @@ const Level = (props) => {
   const [displayTime, setDisplayTime] = useState();
   const [playerID, setPlayerID] = useState();
   const [username, setUsername] = useState();
+  const [markers, setMarkers] = useState([]);
 
   useEffect(async () => {
     let request = await axios.get(`/api/v1/levels/${level}`);
@@ -53,10 +55,16 @@ const Level = (props) => {
     leaderboardPopup.current.style.display = 'block';
   };
 
+  const placeMarker = (x, y) => {
+    setMarkers([...markers, <Checkmark x={x} y={y} />]);
+    console.log(markers);
+  };
+
   const imgClick = (e) => {
-    var rect = e.target.getBoundingClientRect();
-    var x = e.clientX - rect.left; //x position within the element.
-    var y = e.clientY - rect.top; //y position within the element.
+    let rect = e.target.getBoundingClientRect();
+    let x = e.clientX - rect.left; //x position within the element.
+    let y = e.clientY - rect.top; //y position within the element.
+    let { clientX, clientY } = e;
 
     const characterClick = (e) => {
       e.preventDefault();
@@ -83,7 +91,7 @@ const Level = (props) => {
             toggleLeaderboardPopup();
           } else if (response.data.validate) {
             console.log('Char hit!');
-            // placeMarker(x, y);
+            placeMarker(clientX - 5, clientY - 5);
           } else {
             console.log('No chars hit!');
           }
@@ -159,6 +167,7 @@ const Level = (props) => {
             </li>
           </ul>
         </div>
+        {markers}
         <div ref={leaderboardPopup} className="modal">
           <div className="modal-content">
             Enter your username:
