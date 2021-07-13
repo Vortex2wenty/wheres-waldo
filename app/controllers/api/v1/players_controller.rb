@@ -31,6 +31,12 @@ module Api
     end
   end
 
+  def index
+    players = Player.all;
+
+    render json: PlayerSerializer.new(players).serializable_hash.to_json
+  end
+
   private
 
   def create_player_params

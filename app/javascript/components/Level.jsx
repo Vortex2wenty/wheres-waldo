@@ -7,7 +7,7 @@ const Level = (props) => {
   const popup = useRef(null);
   const leaderboardPopup = useRef(null);
   const { level } = useParams();
-  const [popupActive, setPopupActive] = useState(true);
+  const [popupActive, setPopupActive] = useState(false);
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();
   const [displayTime, setDisplayTime] = useState();
@@ -50,7 +50,7 @@ const Level = (props) => {
   });
 
   const toggleLeaderboardPopup = () => {
-    leaderboardPopup.style.display = 'block';
+    leaderboardPopup.current.style.display = 'block';
   };
 
   const imgClick = (e) => {
@@ -114,7 +114,7 @@ const Level = (props) => {
     }
     console.log('Left? : ' + x + ' ; Top? : ' + y + '.');
   };
-  
+
   const handleChange = (event) => {
     setUsername(event.target.value);
   };
@@ -122,10 +122,12 @@ const Level = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let response = await axios.patch(`/api/v1/players/${playerID}`, {
-      name: username
+      name: username,
     });
     if (response.data) {
-      history.push(`/leaderboards/${response.data.data.attributes.leaderboard_id}`);
+      history.push(
+        `/leaderboards/${response.data.data.attributes.leaderboard_id}`
+      );
     }
   };
 
@@ -139,7 +141,7 @@ const Level = (props) => {
             onClick={imgClick}
             style={{ width: '1000px', height: 'auto' }}
           />
-          <ul className="popup-menu" ref={popup}>
+          <ul className="popup-menu" ref={popup} style={{ display: 'none' }}>
             <li>
               <a href="#" data-name="waldo" className="popup-item">
                 Waldo

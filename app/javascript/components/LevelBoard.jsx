@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const LevelBoard = (props) => {
   return (
-    <div className="grid-item level-board">
+    <div className={`grid-item level-board ${props.gridItemBg}`}>
       <div className="grid-img-container">
         <img src={props.img} alt="" />
       </div>
@@ -11,8 +11,8 @@ const LevelBoard = (props) => {
         <h2>{props.title}</h2>
       </div>
       <div className="grid-btn">
-				<Link to='/levels/1' className='btn btn-default'>
-					Play
+				<Link to={`/${props.btnLink}/1`} className='btn btn-default'>
+					{props.btnText}
 				</Link>
       </div>
     </div>

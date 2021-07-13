@@ -1,6 +1,7 @@
 module Api
   module V1
     class ValidateController < ApplicationController
+      # TODO: Implement API token for safety
   def validate
     level = Level.find_by(id: params[:level])
 
@@ -15,7 +16,11 @@ module Api
       level_y = level_char[1]
 
       # TODO: Check if within radius, not exact
-      if user_x === level_x && user_y === level_y
+      puts "user_x " + user_x.to_s
+      puts "level_x " + level_x.to_s
+      puts "user_y " + user_y.to_s
+      puts "level_y " + level_y.to_s
+      if user_x.between?(level_x - 2, level_x + 2) && user_y.between?(level_y - 2, level_y + 2)
         player = Player.find_by(id: session[:current_player_id])
         player.char_checked[user_char] = true
 

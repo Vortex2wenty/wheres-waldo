@@ -35,15 +35,19 @@ body {
 	grid-gap: 20px;
 }
 
-.level-board {
+.level-board, .leaderboard-board {
 	background: #E63946;
 	border-radius: 10px;
 	height: auto;
 }
 
+.leaderboard-board {
+	background: #F3D180;
+}
+
 .grid-img-container {
 	text-align: center;
-	margin-top: 1em;
+	margin-top: 0.5em;
 
 	img {
 		width: 30rem;
@@ -99,4 +103,16 @@ body {
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+}
+
+.bg-red {
+	background: #E63946 !important;
+}
+
+.bg-yellow {
+	background: #F3D180 !important;
+}
+
+.text-dark {
+	color: #000;
 }
