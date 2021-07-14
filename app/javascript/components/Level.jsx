@@ -15,10 +15,11 @@ const Level = (props) => {
   const [playerID, setPlayerID] = useState();
   const [username, setUsername] = useState();
   const [markers, setMarkers] = useState([]);
+  const [image, setImage] = useState();
 
   useEffect(async () => {
     let request = await axios.get(`/api/v1/levels/${level}`);
-    console.log(request.data);
+    setImage(request.data.data.attributes.image_url)
     let leaderboard_id = request.data.data.attributes.leaderboard_id;
     let dateNow = Date.now();
     let response = await axios.post('/api/v1/players', {
@@ -144,7 +145,7 @@ const Level = (props) => {
       <div className="grid-item level-board">
         <div className="grid-img-container">
           <img
-            src={props.img}
+            src={image}
             alt=""
             onClick={imgClick}
             style={{ width: '1000px', height: 'auto' }}

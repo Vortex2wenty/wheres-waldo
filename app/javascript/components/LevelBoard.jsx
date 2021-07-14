@@ -11,7 +11,7 @@ const LevelBoard = (props) => {
         <h2>{props.title}</h2>
       </div>
       <div className="grid-btn">
-				<Link to={`/${props.btnLink}/1`} className='btn btn-default'>
+				<Link to={`/${props.btnLink}/${props.id}`} className='btn btn-default'>
 					{props.btnText}
 				</Link>
       </div>

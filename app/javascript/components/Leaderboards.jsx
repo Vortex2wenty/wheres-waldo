@@ -5,32 +5,32 @@ import LevelBoard from './LevelBoard';
 import axios from 'axios';
 
 const Leaderboards = () => {
-  const [ gridItems, setGridItems ] = useState([]);
+  const [gridItems, setGridItems] = useState([]);
 
   useEffect(async () => {
     let response = await axios.get('/api/v1/levels');
     if (response.data) {
+      let responseItems = [];
       response.data.data.forEach((level) => {
-        setGridItems([
-          ...gridItems,
+        responseItems.push(
           <LevelBoard
-						key={level.id}
+            key={level.attributes.leaderboard_id}
+            id={level.attributes.leaderboard_id}
             img={level.attributes.image_url}
             title={level.attributes.name}
             btnText="View"
             btnLink="leaderboards"
             gridItemBg="bg-yellow"
-          />,
-        ]);
+          />
+        );
       });
+      setGridItems(responseItems);
     }
   }, []);
 
   return (
     <div>
-      <div className="container">
-				{gridItems}
-      </div>
+      <div className="container">{gridItems}</div>
     </div>
   );
 };

@@ -3,14 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import App from './App';
-import departmentImg from 'images/department-store.jpeg';
 import Level from '../components/Level';
 import Leaderboards from '../components/Leaderboards'
 import Leaderboard from '../components/Leaderboard';
-
-const PropsLevel = () => (
-  <Level img={departmentImg} />
-);
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
@@ -18,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <Route path='/' component={Navbar} />
       <Switch>
         <Route exact path='/' component={App} />
-        <Route path='/levels/:level' component={PropsLevel} />
+        <Route path='/levels/:level' component={Level} />
         <Route path='/leaderboards/:leaderboard' component={Leaderboard} />
         <Route path='/leaderboards' component={Leaderboards} />
       </Switch>

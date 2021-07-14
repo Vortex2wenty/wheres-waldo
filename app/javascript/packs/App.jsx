@@ -3,32 +3,32 @@ import axios from 'axios';
 import LevelBoard from '../components/LevelBoard';
 
 const App = () => {
-  const [ gridItems, setGridItems ] = useState([]);
+  const [gridItems, setGridItems] = useState([]);
 
   useEffect(async () => {
     let response = await axios.get('/api/v1/levels');
     if (response.data) {
+      let responseItems = [];
       response.data.data.forEach((level) => {
-        setGridItems([
-          ...gridItems,
+        responseItems.push(
           <LevelBoard
-						key={level.id}
+            key={level.id}
+            id={level.id}
             img={level.attributes.image_url}
             title={level.attributes.name}
             btnText="Play"
             btnLink="levels"
             gridItemBg="bg-red"
-          />,
-        ]);
+          />
+        );
       });
+      setGridItems(responseItems);
     }
   }, []);
 
   return (
     <div>
-      <div className="container">
-				{gridItems}
-      </div>
+      <div className="container">{gridItems}</div>
     </div>
   );
 };

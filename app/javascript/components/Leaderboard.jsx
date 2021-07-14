@@ -25,7 +25,7 @@ const Leaderboard = () => {
     let leaderboardResponse = await axios.get(
       `/api/v1/leaderboards/${leaderboard}`
     );
-    if (leaderboardResponse.data) {
+    if (leaderboardResponse.data.data) {
       let players = leaderboardResponse.data.included.sort((a, b) =>
         a.attributes.time_diff > b.attributes.time_diff ? 1 : b.attributes.time_diff > a.attributes.time_diff ? -1 : 0
       );
