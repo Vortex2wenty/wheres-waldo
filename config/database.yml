@@ -84,6 +84,4 @@ test:
 #
 production:
   <<: *default
-  database: wheres_waldo_production
-  username: vortex2wenty
-  password: <%= ENV['WHERES_WALDO_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
