@@ -1,0 +1,18 @@
+databases:
+  - name: dpg-c3o0iek6fj371m1uq520
+    databaseName: wheres_waldo_database
+    user: wheres_waldo_user
+
+services:
+  - type: web
+    name: "Where's Waldo Web App"
+    env: ruby
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dpg-c3o0iek6fj371m1uq520
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
